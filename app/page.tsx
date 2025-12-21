@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { ServiceList } from '@/components/ServiceList';
 import { GramaServiceType } from '@/types';
 import { useLanguage } from '@/components/LanguageProvider';
@@ -103,7 +104,10 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="text-center py-4 text-gray-400 text-xs">
+      <div className="text-center py-4 text-gray-400 text-xs flex flex-col items-center gap-2">
+        <div className="relative h-6 w-24 opacity-75">
+          <Image src="/logo-dark.png" alt="Vallaroo" fill className="object-contain" />
+        </div>
         <p>{t.footer}</p>
       </div>
     </main>
