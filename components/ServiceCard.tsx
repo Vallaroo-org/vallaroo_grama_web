@@ -1,6 +1,6 @@
 import { GramaService } from '@/types';
 import { Phone, Clock, MapPin } from 'lucide-react';
-import { useLanguage } from '@/hooks/useLanguage'; // Assuming this import path
+import { useLanguage } from '@/components/LanguageProvider';
 
 interface ServiceCardProps {
     service: GramaService;
@@ -38,11 +38,6 @@ export function ServiceCard({ service }: ServiceCardProps) {
                         </div>
                     )}
 
-                    <div className="space-y-1 mt-2">
-                        {service.stand_name}
-                    </div>
-                        )}
-
                     {(service.available_from || service.available_to) && (
                         <div className="flex items-center text-gray-600 text-sm">
                             <Clock className="w-4 h-4 mr-2 text-orange-500" />
@@ -50,16 +45,15 @@ export function ServiceCard({ service }: ServiceCardProps) {
                         </div>
                     )}
                 </div>
-            </div>
 
-            <a
-                href={`tel:${service.phone_number}`}
-                className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white p-3 rounded-full shadow-lg transition-transform active:scale-95 flex items-center justify-center h-12 w-12"
-                aria-label={`Call ${service.name}`}
-            >
-                <Phone className="w-6 h-6" />
-            </a>
+                <a
+                    href={`tel:${service.phone_number}`}
+                    className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white p-3 rounded-full shadow-lg transition-transform active:scale-95 flex items-center justify-center h-12 w-12"
+                    aria-label={`Call ${service.name}`}
+                >
+                    <Phone className="w-6 h-6" />
+                </a>
+            </div>
         </div>
-        </div >
     );
 }
