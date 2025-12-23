@@ -21,7 +21,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                         <h3 className="text-xl font-bold text-gray-900">{name}</h3>
                         {service.service_subtype && (
                             <span className="bg-indigo-50 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium border border-indigo-100">
-                                {service.service_subtype}
+                                {language === 'ml' && service.service_subtype_ml ? service.service_subtype_ml : service.service_subtype}
                             </span>
                         )}
                         {isAvailable ? (

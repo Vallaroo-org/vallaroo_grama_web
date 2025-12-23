@@ -23,15 +23,31 @@ export function ServiceList({ type }: ServiceListProps) {
 
     async function fetchServices() {
         setLoading(true);
-        const { data } = await supabase
-            .from('grama_services')
-            .select('*')
-            .eq('service_type', type)
-            .order('is_available', { ascending: false }) // Available first
-            .order('name', { ascending: true }); // Then alphabetical
+        const [{ data: servicesData }, { data: subtypesData }] = await Promise.all([
+            supabase
+                .from('grama_services')
+                .select('*')
+                .eq('service_type', type)
+                .eq('is_hidden', false)
+                .order('is_available', { ascending: false })
+                .order('name', { ascending: true }),
+            supabase
+                .from('grama_service_subtypes')
+                .select('name, name_ml')
+                .eq('service_type', type)
+        ]);
 
-        if (data) {
-            setServices(data as GramaService[]);
+        if (servicesData) {
+            const enrichedServices = (servicesData as GramaService[]).map(service => {
+                if (service.service_subtype && subtypesData) {
+                    const subtypeInfo = subtypesData.find(s => s.name === service.service_subtype);
+                    if (subtypeInfo && subtypeInfo.name_ml) {
+                        return { ...service, service_subtype_ml: subtypeInfo.name_ml };
+                    }
+                }
+                return service;
+            });
+            setServices(enrichedServices);
         }
         setLoading(false);
     }
@@ -71,8 +87,8 @@ export function ServiceList({ type }: ServiceListProps) {
                     <button
                         onClick={() => setSelectedStand(null)}
                         className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${selectedStand === null
-                                ? 'bg-indigo-600 text-white border-indigo-600'
-                                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                            ? 'bg-indigo-600 text-white border-indigo-600'
+                            : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
                             }`}
                     >
                         All Areas
@@ -82,8 +98,8 @@ export function ServiceList({ type }: ServiceListProps) {
                             key={stand}
                             onClick={() => setSelectedStand(stand === selectedStand ? null : stand)}
                             className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${selectedStand === stand
-                                    ? 'bg-indigo-600 text-white border-indigo-600'
-                                    : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                                ? 'bg-indigo-600 text-white border-indigo-600'
+                                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
                                 }`}
                         >
                             {stand}

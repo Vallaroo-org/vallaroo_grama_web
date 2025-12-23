@@ -7,6 +7,7 @@ export interface GramaService {
     phone_number: string;
     service_type: GramaServiceType;
     service_subtype?: string;
+    service_subtype_ml?: string;
     stand_name?: string;
     stand_name_ml?: string;
     is_available: boolean;
